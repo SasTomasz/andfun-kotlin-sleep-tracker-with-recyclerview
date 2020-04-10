@@ -61,7 +61,18 @@ class SleepTrackerFragment : Fragment() {
 
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
+
+        val adapter = SleepNightAdapter()
+        binding.sleepList.adapter = adapter
+
+        sleepTrackerViewModel.nights.observe(this, Observer{
+            it?.let {
+                adapter.data = it
+            }
+        })
+
+
 
         // Add an Observer on the state variable for showing a Snackbar message
         // when the CLEAR button is pressed.
@@ -96,12 +107,6 @@ class SleepTrackerFragment : Fragment() {
                 sleepTrackerViewModel.doneNavigating()
             }
         })
-
-        // TODO (04) Create a new SleepNightAdapter variable,
-        // and bind it to the RecyclerView’s Adapter.
-
-        // TODO (05) Create an observer on sleepTrackerViewModel.nights that tells
-        // the Adapter when there is new data.
 
         return binding.root
     }
